@@ -1,0 +1,28 @@
+body{
+	font-family: Helvetica Arial Times;
+	background-color: lightblue;
+}
+
+h1{
+	font-size: 22px;
+	text-align: center;
+}
+
+h2{
+	font-size: 16px;
+	text-align: center;
+
+}
+
+a {
+
+}
+
+#mainHolder{
+	margin: 20% 30%;
+
+}
+
+#anchorContainer{
+	text-align: center;
+}
