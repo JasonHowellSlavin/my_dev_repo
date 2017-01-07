@@ -19,7 +19,13 @@ a {
 }
 
 #mainHolder{
-	margin: 20% 30%;
+	vertical-align: center;
+	text-align: center;
+	margin: 20% auto;
+	height: 60%;
+	width: 30%;
+	border: 2px solid grey;
+	background-color: #FFFFEE;
 
 }
 
