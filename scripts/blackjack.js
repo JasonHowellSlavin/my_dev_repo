@@ -7,6 +7,7 @@ function Player (name, position) {
 	this.position = position;
 	this.chipCount = 0;
 	this.handOfCards = [];
+	this.playerStatus = true;
 };
 //This is the dealer class
 function Dealer (name, deckOfCards) {
@@ -14,12 +15,37 @@ function Dealer (name, deckOfCards) {
 	this.deckOfCards = deckOfCards;
 	this.dealerHand = [];
 
-	function dealHandsToPlayersAndSelf () {
-		//Will Need to set this variable inside of a for loop, making the variable each time, or rather
-		//make another function that chooses the random card.......
-		var cardToDeal = Math.floor((Math.random() * this.deckOfCards.length) + 1);
+	function shuffleDeck (deck){
+	    let counter = array.length;
+
+	    // While there are elements in the array
+	    while (counter > 0) {
+	        // Pick a random index
+	        let index = Math.floor(Math.random() * counter);
+	        // Decrease counter by 1
+	        counter--;
+	        // And swap the last element with it
+	        let temp = array[counter];
+	        array[counter] = array[index];
+	        array[index] = temp;
+    	}
+
+    return array;
 	}
+
+	function dealCardstoPlayersSelf () {
+		let numOfPlayersSitting = 0;
+		for (var i = 0; i <= 4; i++) {
+			if ("Player" + i[playerStatus] === true) {
+				return function () {numOfPlayersSitting++;}
+			}
+		}
+		console.log(numOfPlayersSitting + "This is how many players");
+	}
+
+
 };
+
 //Creates the table object literal. 
 var Table = {
 	color : "green",

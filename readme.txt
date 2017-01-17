@@ -31,5 +31,21 @@ Table of Contents:
 		Position: This number will determine position sitting at the table.
 		Name: The Player’s Name
 		Chip Count: This contains initial chip count, starting is 100 chips.
+	B) Methods:
+		Bet: This method will allow them to bet a certain amount via the DOM
+ 		     and input.
+		Hit: This asks for another card.
+		Stay: This method will start the Dealer’s “Check, Hit, Stay” method.
+		Split: If the player has two cards of the same type, they may split 			      receiving a card in each, and having the ability to hit each.
+		Double Down: Doubles the Player bet, and gives them one more card.
+2. The Dealer Object:
+	A) Variables:
+	B) Methods:
+3.The Table Object Literal:
+	A) Variables:
+	B) Methods: 
+
+
+
 		
 
