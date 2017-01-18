@@ -1,5 +1,4 @@
-window.onload = function () {
-	console.log("You have the bridge commander");	
+console.log("You have the bridge commander");	
 
 //This is the player class
 function Player (name, position) {
@@ -13,10 +12,10 @@ function Player (name, position) {
 function Dealer (name, deckOfCards) {
 	this.name = name;
 	this.deckOfCards = deckOfCards;
-	this.dealerHand = [];
+	this.handOfCards = []; //could i use a prototype?
 
-	function shuffleDeck (deck){
-	    let counter = array.length;
+	this.shuffleDeck = function (deck){
+	    let counter = deck.length;
 
 	    // While there are elements in the array
 	    while (counter > 0) {
@@ -25,22 +24,33 @@ function Dealer (name, deckOfCards) {
 	        // Decrease counter by 1
 	        counter--;
 	        // And swap the last element with it
-	        let temp = array[counter];
-	        array[counter] = array[index];
-	        array[index] = temp;
+	        let temp = deck[counter];
+	        deck[counter] = deck[index];
+	        deck[index] = temp;
     	}
+    }
 
-    return array;
+    this.dealCard = function (deck, dealer, players) {
+    	return true;
+    }
+
+	this.dealCardstoPlayersSelf = function (player) {
+		for (var i = 1; i <= 2; i++) {
+
+			player.handOfCards.push(Table.deckOfCards[0]);
+			this.deckOfCards.shift();
+			this.handOfCards.push(Table.deckOfCards[0]);
+			this.deckOfCards.shift();
+		}
+		console.log(player.handOfCards + " this is the player hand");
+		console.log(this.handOfCards + " this is the dealer hand");
 	}
 
-	function dealCardstoPlayersSelf () {
-		let numOfPlayersSitting = 0;
-		for (var i = 0; i <= 4; i++) {
-			if ("Player" + i[playerStatus] === true) {
-				return function () {numOfPlayersSitting++;}
-			}
-		}
-		console.log(numOfPlayersSitting + "This is how many players");
+	this.dealCardsToTable = function () {
+		Table.placeCardsOnTable(Player1, "playerOneHand", "number1", 0, 0);
+		Table.placeCardsOnTable(Player1, "playerOneHand", "number2", 1, 1);
+		Table.placeCardsOnTable(beginningDealer, "dealerHand", "dNumber1", 0, 0);
+		Table.placeCardsOnTable(beginningDealer, "dealerHand", "dNumber2", 1, 1);
 	}
 
 
@@ -49,7 +59,34 @@ function Dealer (name, deckOfCards) {
 //Creates the table object literal. 
 var Table = {
 	color : "green",
-	numberOfPlayers : 2
+	numberOfPlayers : 2,
+	playerArray : [],
+	deckOfCards : [],
+	placeCardsOnTable : function (currentHand, currentLocation, numberOfCardDealt, objectNumber, cardNumberForDeal) {
+		//create the elements for a new card
+		appendLocation = document.getElementById(currentLocation)
+		let newCard = document.createElement("div");
+		let cardHigh = document.createElement("div");
+		let cardLow = document.createElement("div");
+		newCard.setAttribute("id", numberOfCardDealt);
+		cardHigh.setAttribute("class", "cardHigher");
+		cardLow.setAttribute("class", "cardLower");
+		cardLocation = document.getElementById(numberOfCardDealt);
+		let cardSuit;
+		let cardNumber;
+		//text nodes created in loop
+		cardSuit = document.createTextNode("no suit")
+		cardNumber = document.createTextNode(currentHand.handOfCards[cardNumberForDeal]);
+		console.log(newCard);
+		appendLocation.appendChild(newCard);
+		cardLocation = document.getElementById(numberOfCardDealt);
+		cardLocation.appendChild(cardHigh);
+		cardLocation.appendChild(cardLow);
+		cardHighDOM = document.getElementsByClassName("cardHigher");
+		cardLowDOM = document.getElementsByClassName("cardLower");
+		cardHighDOM[objectNumber].appendChild(cardSuit);
+		cardLowDOM[objectNumber].appendChild(cardNumber);
+	}
 };
 
 
@@ -68,15 +105,24 @@ function createDeck (array) {
 }
 //Calls the first Deck creation method
 createDeck(noSuitDeck);
+Table.deckOfCards = noSuitDeck;
+
 //Instantiates new objects using object constructor methods
-var Player1 = new  Player("Test Player", 1);
-var beginningDealer = new Dealer("Smokey Joe", noSuitDeck);
+let Player1 = new  Player("Test Player", 1);
+let beginningDealer = new Dealer("Smokey Joe", noSuitDeck);
 //logs out properties
 console.log(Player1);
 console.log(beginningDealer);
 console.log(beginningDealer.deckOfCards);
 console.log("You made this deck:\n" + noSuitDeck);
+beginningDealer.shuffleDeck(noSuitDeck);
+beginningDealer.dealCardstoPlayersSelf(Player1);
+beginningDealer.dealCardsToTable();
+// Table.placeCardsOnTable(Player1, "playerOneHand", "number1", 0, 0);
+// Table.placeCardsOnTable(Player1, "playerOneHand", "number2", 1, 1);
+// Table.placeCardsOnTable(beginningDealer, "dealerHand", "dNumber1", 0, 0);
+// Table.placeCardsOnTable(beginningDealer, "dealerHand", "dNumber2", 1, 1);
 
 
 
-};
+

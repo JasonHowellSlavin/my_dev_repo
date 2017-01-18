@@ -2,8 +2,45 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
+	<link href="../styles/blackjack.css" rel="stylesheet">
 </head>
 <body>
-<script src="scripts/blackjack.js"></script>
+	<main>
+		<header>
+			<h1>BlackJack!</h1>
+			<nav>
+				<a href="../index.html">Home</a>
+			</nav>
+		</header>
+	</main>
+	<section id="startGame">
+		<div id="mainStart" class="noDisplay">
+		</div>
+	</section>
+	<section id="playerInput">
+	</section>
+	<section id="gameBoard">
+		<div id="mainStart">
+			<div id="dealer">
+				<h1>Dealer</h1>
+				<div id="dealerHand">
+				</div>
+			</div>
+			<div class="spacer"></div>
+			<div id="playerSeats">
+				<div id="playerOne">
+					<h1>Player 1</h1>
+					<div id="playerOneHand">
+					</div>	
+				</div>
+			</div>
+		</div>
+	</section>
+	<section id="buttonHolder">
+		<button id="dealCards">Deal</button>
+		<button id="takeAnotherCard">Hit!</button>
+		<button id="stayPat">Stay</button>
+	</section>
+<script src="../scripts/blackjack.js"></script>
 </body>
 </html>
