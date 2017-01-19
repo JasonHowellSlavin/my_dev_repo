@@ -6,7 +6,14 @@ function Player (name, position) {
 	this.position = position;
 	this.chipCount = 0;
 	this.handOfCards = [];
+	//below ensures correct card selection from array
 	this.playerStatus = true;
+
+	this.turnCardsIntoDealer = function () {
+		//this function needs to clear hand OfCards - called on deal click
+		//needs to check if hand is empty
+		return true;
+	};
 };
 //This is the dealer class
 function Dealer (name, deckOfCards) {
@@ -28,15 +35,14 @@ function Dealer (name, deckOfCards) {
 	        deck[counter] = deck[index];
 	        deck[index] = temp;
     	}
-    }
+    };
 
     this.dealCard = function (deck, dealer, players) {
     	return true;
-    }
+    };
 
 	this.dealCardstoPlayersSelf = function (player) {
 		for (var i = 1; i <= 2; i++) {
-
 			player.handOfCards.push(Table.deckOfCards[0]);
 			this.deckOfCards.shift();
 			this.handOfCards.push(Table.deckOfCards[0]);
@@ -44,16 +50,45 @@ function Dealer (name, deckOfCards) {
 		}
 		console.log(player.handOfCards + " this is the player hand");
 		console.log(this.handOfCards + " this is the dealer hand");
+	};
+
+	// this.dealCardsToTable = function (player) {
+	// 	//should this be a method of the table? 
+	// 	if (areCardsBeingDealt === false){
+	// 		let playerCardOne = document.getElementsByClassName("hiddenCard")[5];
+	// 		let playerCardTwo = document.getElementsByClassName("hiddenCard")[6];
+	// 		let dealerCardOne = document.getElementsByClassName("hiddenCard")[0];
+	// 		let dealerCardTwo = document.getElementsByClassName("hiddenCard")[1];
+	// 		dealerCardOne.setAttribute("class", "card");
+	// 		dealerCardTwo.setAttribute("class", "card");
+	// 		playerCardOne.setAttribute("class", "card");
+	// 		playerCardTwo.setAttribute("class", "card");
+	// 		dealerCardOne.innerHTML += "<br> No Suit <br>" + this.handOfCards[0]; 
+	// 		dealerCardTwo.innerHTML += "<br> No Suit <br>" + this.handOfCards[1];
+	// 		playerCardOne.innerHTML += "<br> No Suit <br>" + player.handOfCards[0];
+	// 		playerCardTwo.innerHTML += "<br> No Suit <br>" + player.handOfCards[1];
+	// 	}
+	// 	areCardsBeingDealt = true;
+	// 	return areCardsBeingDealt;
+	// };
+
+	this.hitPlayer = function (player) {
+		console.log("This is the player SUM: " + playerHandSum);
+		if (playerHandSum <= 21) {
+			player.handOfCards.push(Table.deckOfCards[0]);
+			Table.deckOfCards.shift();	
+		} else {
+			console.log("player busts");
+		}
+		console.log(player.handOfCards);
+		return true;
 	}
 
-	this.dealCardsToTable = function () {
-		Table.placeCardsOnTable(Player1, "playerOneHand", "number1", 0, 0);
-		Table.placeCardsOnTable(Player1, "playerOneHand", "number2", 1, 1);
-		Table.placeCardsOnTable(beginningDealer, "dealerHand", "dNumber1", 0, 0);
-		Table.placeCardsOnTable(beginningDealer, "dealerHand", "dNumber2", 1, 1);
-	}
-
-
+	this.newDealerHand = function () {
+		//this needs to emoty handOfCards .... called on "Deal" click
+		//check if handOfCards is empty. 
+		return true;
+	};
 };
 
 //Creates the table object literal. 
@@ -62,31 +97,52 @@ var Table = {
 	numberOfPlayers : 2,
 	playerArray : [],
 	deckOfCards : [],
-	placeCardsOnTable : function (currentHand, currentLocation, numberOfCardDealt, objectNumber, cardNumberForDeal) {
-		//create the elements for a new card
-		appendLocation = document.getElementById(currentLocation)
-		let newCard = document.createElement("div");
-		let cardHigh = document.createElement("div");
-		let cardLow = document.createElement("div");
-		newCard.setAttribute("id", numberOfCardDealt);
-		cardHigh.setAttribute("class", "cardHigher");
-		cardLow.setAttribute("class", "cardLower");
-		cardLocation = document.getElementById(numberOfCardDealt);
-		let cardSuit;
-		let cardNumber;
-		//text nodes created in loop
-		cardSuit = document.createTextNode("no suit")
-		cardNumber = document.createTextNode(currentHand.handOfCards[cardNumberForDeal]);
-		console.log(newCard);
-		appendLocation.appendChild(newCard);
-		cardLocation = document.getElementById(numberOfCardDealt);
-		cardLocation.appendChild(cardHigh);
-		cardLocation.appendChild(cardLow);
-		cardHighDOM = document.getElementsByClassName("cardHigher");
-		cardLowDOM = document.getElementsByClassName("cardLower");
-		cardHighDOM[objectNumber].appendChild(cardSuit);
-		cardLowDOM[objectNumber].appendChild(cardNumber);
+	//this will ensure the deck button won't fire twice
+	hasHandBeenDealt : false,
+	//ensures that a "hit" will always reveal the next card in DOM
+	playerCardCount : 3,
+	dealerCardCoutn : 1,
+
+	dealCardsToTable : function (player, dealer) {
+	//should this be a method of the table? 
+	if (areCardsBeingDealt === false){
+		let playerCardOne = document.getElementsByClassName("hiddenCard")[5];
+		let playerCardTwo = document.getElementsByClassName("hiddenCard")[6];
+		let dealerCardOne = document.getElementsByClassName("hiddenCard")[0];
+		let dealerCardTwo = document.getElementsByClassName("hiddenCard")[1];
+		dealerCardOne.setAttribute("class", "card");
+		dealerCardTwo.setAttribute("class", "card");
+		playerCardOne.setAttribute("class", "card");
+		playerCardTwo.setAttribute("class", "card");
+		dealerCardOne.innerHTML += "<br> No Suit <br>" + dealer.handOfCards[0]; 
+		dealerCardTwo.innerHTML += "<br> No Suit <br>" + dealer.handOfCards[1];
+		playerCardOne.innerHTML += "<br> No Suit <br>" + player.handOfCards[0];
+		playerCardTwo.innerHTML += "<br> No Suit <br>" + player.handOfCards[1];
 	}
+	areCardsBeingDealt = true;
+	return areCardsBeingDealt;
+	},
+
+	playerHitOnTable : function (dealer, player) {
+		let cardPlacement = this.playerCardCount + 1;
+		let playerHitCard = document.getElementsByClassName("hiddenCard")[this.playerCardCount];
+		playerHitCard.setAttribute("class", "card");
+		let hitCardNum = player.handOfCards.length - 1;
+		console.log(hitCardNum);
+		console.log(player.handOfCards);
+		playerHitCard.innerHTML += "<br> No Suit <br>" + player.handOfCards[hitCardNum];
+		player.hitCardNum++;
+	},
+
+	newHandEraseNumbers : function () {
+		return true;
+		//remove old innerHTML
+	},
+
+	newHandEraseCards : function () {
+		return true;
+		//change attributes to "remove cards"
+	} 
 };
 
 
@@ -110,6 +166,13 @@ Table.deckOfCards = noSuitDeck;
 //Instantiates new objects using object constructor methods
 let Player1 = new  Player("Test Player", 1);
 let beginningDealer = new Dealer("Smokey Joe", noSuitDeck);
+
+//Instantiates global variables
+let hitButton = document.getElementById("takeAnotherCard");
+let dealButton = document.getElementById("dealCards");
+let areCardsBeingDealt = false;
+let playerHandSum = 0;
+
 //logs out properties
 console.log(Player1);
 console.log(beginningDealer);
@@ -117,11 +180,27 @@ console.log(beginningDealer.deckOfCards);
 console.log("You made this deck:\n" + noSuitDeck);
 beginningDealer.shuffleDeck(noSuitDeck);
 beginningDealer.dealCardstoPlayersSelf(Player1);
-beginningDealer.dealCardsToTable();
-// Table.placeCardsOnTable(Player1, "playerOneHand", "number1", 0, 0);
-// Table.placeCardsOnTable(Player1, "playerOneHand", "number2", 1, 1);
-// Table.placeCardsOnTable(beginningDealer, "dealerHand", "dNumber1", 0, 0);
-// Table.placeCardsOnTable(beginningDealer, "dealerHand", "dNumber2", 1, 1);
+
+function changeItBlue () {	
+	var blueChange = document.getElementsByClassName("card");
+	for (var i = 0; i < 5; i++) {
+		blueChange[i].className += " blueCard";	
+	}
+}
+
+function hitMe () {
+	beginningDealer.hitPlayer(Player1);
+	Table.playerHitOnTable(Player1, beginningDealer);
+}
+
+//testerFunction needs to be replaced by function that clears DOM and arrays
+// dealButton.addEventListener("click", changeItBlue); 
+//event listeners go here:
+dealButton.addEventListener("click", function () {Table.dealCardsToTable(Player1, beginningDealer);});
+hitButton.addEventListener("click", function () {beginningDealer.hitPlayer(Player1);});
+hitButton.addEventListener("click", function () {Table.playerHitOnTable(beginningDealer, Player1);});
+
+
 
 
 

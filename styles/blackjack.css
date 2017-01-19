@@ -34,12 +34,20 @@ button {
 	height: 50px
 }
 
+.hiddenCard {
+	display: none;
+}
+
 .card {
 	width:35px;
 	height: 60px;
 	border: 1px solid black;
+	float: left;
+	margin-left: 1px;
+	font-size: 12px;
+	font-family: Gerramond;
 }
-.cardHigher {
+/*.cardHigher {
 	width: 33px;
 	height:28px;
 	border: 1px solid red;
@@ -49,7 +57,14 @@ button {
 	width: 33px;
 	height:28px;
 	border: 1px solid orange;
-	font-size: 10px;
+	font-size: 10px;*/
+/*
+going to refactor using...duh....string notation
+}*/
+
+.blueCard {
+	background-color: blue;
+	border: 1px solid yellow;
 }
 
 #mainStart {
@@ -96,10 +111,3 @@ button {
 	background-color: #556655;
 	margin: 1px auto;
 }
-#number1, #number2, #dNumber1, #dNumber2 {
-	width:35px;
-	height: 60px;
-	border: 1px solid black;
-	float:left;
-}
-
