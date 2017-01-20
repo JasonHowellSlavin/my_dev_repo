@@ -31,7 +31,8 @@ button {
 }
 
 .spacer {
-	height: 50px
+	height: 50px;
+	text-align:center;
 }
 
 .hiddenCard {
@@ -42,10 +43,13 @@ button {
 	width:35px;
 	height: 60px;
 	border: 1px solid black;
+	background-color: white;
 	float: left;
+	padding-left: 3px;
 	margin-left: 1px;
 	font-size: 12px;
 	font-family: Gerramond;
+	border-radius: 5px;
 }
 /*.cardHigher {
 	width: 33px;
@@ -76,14 +80,14 @@ going to refactor using...duh....string notation
 }
 
 #dealer {
-	width:200px;
+	width:250px;
 	height: 150px;
 	border:5px solid black;
 	margin: 2px auto;
 }
 
 #dealerHand {
-	width: 194px;
+	width: 224px;
 	height: 75px;
 	margin: 20px auto 2px auto;
 	border: 1px solid black;
@@ -91,7 +95,7 @@ going to refactor using...duh....string notation
 }
 
 #playerOne {
-	width: 200px;
+	width: 250px;
 	height: 150px;
 	margin: 2px auto;
 	border: 5px solid black;
@@ -99,7 +103,7 @@ going to refactor using...duh....string notation
 }
 
 #playerOneHand{
-	width: 194px;
+	width: 224px;
 	height: 75px;
 	margin: 20px auto 2px auto;
 	border: 1px solid black;
