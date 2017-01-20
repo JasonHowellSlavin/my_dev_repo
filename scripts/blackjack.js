@@ -160,6 +160,7 @@ var Table = {
 		}
 	},
 
+	//not DRY. Function above could do....fix later
 	dealerHitOnTable : function (dealer, player) {
 		if (player.stayStatus === true) {
 			if (dealer.stayStatus === false) {
