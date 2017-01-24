@@ -51,24 +51,13 @@ button {
 	font-family: Gerramond;
 	border-radius: 5px;
 }
-/*.cardHigher {
-	width: 33px;
-	height:28px;
-	border: 1px solid red;
-	font-size: 10px;
-}
-.cardLower{
-	width: 33px;
-	height:28px;
-	border: 1px solid orange;
-	font-size: 10px;*/
-/*
-going to refactor using...duh....string notation
-}*/
 
 .blueCard {
 	background-color: blue;
 	border: 1px solid yellow;
+	width:35px;
+	height: 60px;
+	float: left;
 }
 
 #mainStart {
