@@ -100,7 +100,51 @@ button {
 
 #buttonHolder {
 	width:750px;
-	height: 30px;
+	height: 32px;
 	background-color: #556655;
 	margin: 1px auto;
+}
+
+.chips, #chipCount, #setBet {
+	width: 50px;
+	height:28px;
+	background-color: #EEEFBF;
+	border: 2px solid black;
+	float:left;
+}
+
+.chips {
+	text-align: center;
+	vertical-align: center;
+}
+
+#betAmount {
+	width: 100px;
+	height:28px;
+	background-color: #EEEFBF;
+	border: 2px solid black;
+	float:left;
+}
+
+#betHolder, #setBet {
+	width: 50px;
+	height: 32px;
+	float:left;
+}
+
+#betAmountUp {
+	width: 50px;
+	height:16px;
+	background-color: #EEEFBF;
+	border: 2px solid black;
+	float:left;
+}
+
+#betAmountDown {
+	width: 50px;
+	height:16px;
+	background-color: #EEEFBF;
+	border: 2px solid black;
+	line-height: 2px;
+	float:left;
 }

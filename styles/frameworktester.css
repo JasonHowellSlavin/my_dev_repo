@@ -1,0 +1,53 @@
+h1, h2, h3, p, section, a, article, body {
+	font-size: 20px;
+	font-family: Helvetica Times;
+}
+
+p:first-letter {
+	font-weight: bold;
+	font-size: 32px;
+}
+
+.overflow {
+	width: 150px;
+	height: 150px;
+	border: 2px solid black;
+	float: left;
+	overflow: auto;
+}
+
+.overflow:nth-child(1n+2) {
+	font-weight: bold;
+	color:red;
+}
+
+ .humans, .human1, .human2 {
+	background-image: url(../humans.jpeg);
+	font-size: 50px;
+	background-color: grey;
+	width: 150px;
+	height: 150px;
+	border: 2px solid black;
+	float: left;
+}
+
+.human1 {
+	background-position: -300px 0;
+}
+
+.human2 {
+	background-position: -450px 0;
+}
+
+.humans:hover, .humans:focus {
+	background-position: 0 -150px;
+}
+
+.human1:hover, .human1:focus {
+	background-position: -300px -150px;
+}
+
+.human2:hover, .human2:focus {
+	background-position: -450px -150px;
+}
+

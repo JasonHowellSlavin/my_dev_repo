@@ -4,18 +4,15 @@ console.log("You have the bridge commander");
 function Player (name, position) {
 	this.name = name;
 	this.position = position;
-	this.chipCount = 0;
+	this.chipCount = 100;
 	this.handOfCards = [];
+	this.ableToHit = false;
 	this.bustStatus = false;
 	this.stayStatus = false;
 	this.winStatus = false;
 	this.sumOfHand = 0;
-
-	this.turnCardsIntoDealer = function () {
-		//this function needs to clear hand OfCards - called on deal click
-		//needs to check if hand is empty
-		return true;
-	};
+	this.betAmount = 0;
+	this.betSet = false;
 
 	this.stayKeepCards = function () {
 		console.log("I am deciding to stay");
@@ -23,7 +20,37 @@ function Player (name, position) {
 			console.log("returning a true stay status");
 			return this.stayStatus = true;
 		}
-	}
+	};
+
+	this.raiseBet = function (table) {
+		if (this.betSet === false){
+			if(this.betAmount <= this.chipCount) {
+				this.betAmount += 5;
+				table.displayPlayerBet(this);
+			}
+		}	
+	};
+
+	this.lowerBet = function (table) {
+		if (this.betSet === false) {
+			if(this.betAmount >= 0) {
+				this.betAmount -= 5;
+				table.displayPlayerBet(this);
+			}
+		}
+	};
+
+	this.setBetAmount = function (table) {
+		if (this.betSet === false) {
+			if(this.betAmount > 0) {
+				table.playerBetAmount = this.betAmount;
+				this.chipCount = this.chipCount - this.betAmount
+				table.displayPlayerBet(this);
+				table.playerChipCount(this);
+				this.betSet = true;
+			}
+		}
+	};
 };
 
 //This is the dealer class
@@ -67,13 +94,16 @@ function Dealer (name, deckOfCards) {
 			console.log(player.handOfCards + " this is the player hand");
 			console.log(this.handOfCards + " this is the dealer hand");	
 		}
+		player.ableToHit = true;
 		return haveCardsBeenDealtByDealer = true;
 	};
 
 	this.hitPlayer = function (player) {
-		if (player.bustStatus === false){
-		player.handOfCards.push(Table.deckOfCards[0]);
-		Table.deckOfCards.shift();	
+		if (player.bustStatus === false && haveCardsBeenDealtByDealer === true){
+			if (player.ableToHit === true){
+				player.handOfCards.push(Table.deckOfCards[0]);
+				Table.deckOfCards.shift();	
+			}
 		}	
 	};
 
@@ -81,7 +111,7 @@ function Dealer (name, deckOfCards) {
 		console.log("hitting self");
 		if (player.stayStatus === true){
 			let dealerCardSum = this.handOfCards.reduce(function (a, b){ return a + b;}, 0);
-			if (dealerCardSum < 17) {
+			if (dealerCardSum < 16) {
 				this.handOfCards.push(Table.deckOfCards[0]);
 				Table.deckOfCards.shift();
 			} else {
@@ -93,10 +123,11 @@ function Dealer (name, deckOfCards) {
 
 	this.checkIfCardTakerBust = function (object) {
 		let playerCardSum = object.handOfCards.reduce(function (a, b) {return a + b;}, 0);
-
 		if (playerCardSum > 21) {
 			object.bustStatus = true;
+			object.stayStatus = true;
 			Table.cardTakerHasBusted(object);
+			this.playerHasStayed(Player1, Table)
 			return object.bustStatus;
 		}
 	};
@@ -108,16 +139,19 @@ function Dealer (name, deckOfCards) {
 				this.hitSelf(player);
 				table.dealerHitOnTable(this, player);
 				this.checkIfCardTakerBust(this);
-				this.checkWhoWon(player);
+				this.checkWhoWon(player, table);
 				table.someoneHasWon(player);
 				table.someoneHasWon(this);
-				window.setTimeout(table.newHandEraseNumbers, 5000);
-				window.setTimeout(table.newHandEraseCards, 5000);
+				player.ableToHit = false;
+				window.setTimeout(table.newHandEraseCards, 3000);
+				window.setTimeout(table.newHandEraseNumbers, 3500);
+				player.betSet = false;
+				this.giveOrTakeChips(player, table);
 			}
 		}
 	};
 
-	this.checkWhoWon = function (player) {
+	this.checkWhoWon = function (player, table) {
 		this.sumOfHand = this.handOfCards.reduce(function (a, b){ return a + b;}, 0);
 		player.sumOfHand = player.handOfCards.reduce(function (a, b){ return a + b;}, 0);
 		if(player.bustStatus === false && this.bustStatus === true){
@@ -128,8 +162,12 @@ function Dealer (name, deckOfCards) {
 			this.winStatus = true;
 		} else if (this.sumOfHand < player.sumOfHand && player.bustStatus !== true) {
 			player.winStatus = true;
+		} else if (this.sumOfHand === player.sumOfHand){
+			player.winStatus === false;
+			this.winStatus === false;
+			table.playersPush();
 		}
-	}
+	};
 	
 	this.askForNewGame = function (player, table) {
 		if (player.winStatus === true || this.winStatus === true) {
@@ -140,12 +178,36 @@ function Dealer (name, deckOfCards) {
 		return true;
 	};
 
-	this.newDealerHand = function () {
-		//this needs to emoty handOfCards .... called on "Deal" click
-		//check if handOfCards is empty. 
-		return true;
+	this.newHand = function (object) {
+		console.log("This is the Object:", object);
+		if (object.handOfCards.length !== undefined) {
+			let arrayLength = object.handOfCards.length;
+			for (var i = 0; i < arrayLength; i++) {
+				object.handOfCards.pop();	
+			}
+		console.log("Array is Empty");	
+		}
+	};
+
+	this.giveOrTakeChips = function (player, table) {
+		if (player.winStatus === true && this.winStatus === false) {
+			player.chipCount += player.betAmount;
+			table.playerChipCount(player);
+		}
 	};
 };
+
+// 	this.shuffleNewDeck = function (table) {
+// 		let cardsLeft = this.deckOfCards.length;
+// 		if (cardsLeft < MIN_CARDS_TO_SHUFFLE) {
+// 			while (cardsLeft > 0) {
+// 				this.deckOfCards.pop()	
+// 			}
+// 		}
+// 		createDeck(noSuitDeck);
+// 		Table.
+// 	}
+// };
 
 //Creates the table object literal. 
 var Table = {
@@ -158,6 +220,7 @@ var Table = {
 	//ensures that a "hit" will always reveal the next card in DOM
 	playerCardCount : 3,
 	dealerCardCount : 1,
+	playerBetAmount : 0,
 
 	dealCardsToTable : function (player, dealer) {
 	//it might be better to have both hiddenCard and card as classes so div object numbers stay the same....
@@ -170,17 +233,17 @@ var Table = {
 		dealerCardTwo.setAttribute("class", "card");
 		playerCardOne.setAttribute("class", "card");
 		playerCardTwo.setAttribute("class", "card");
-		dealerCardOne.innerHTML += "<br> No Suit <br>" + dealer.handOfCards[0]; 
-		dealerCardTwo.innerHTML += "<br> No Suit <br>" + dealer.handOfCards[1];
-		playerCardOne.innerHTML += "<br> No Suit <br>" + player.handOfCards[0];
-		playerCardTwo.innerHTML += "<br> No Suit <br>" + player.handOfCards[1];
+		dealerCardOne.innerHTML = "<br> No Suit <br>" + dealer.handOfCards[0]; 
+		dealerCardTwo.innerHTML = "<br> No Suit <br>" + dealer.handOfCards[1];
+		playerCardOne.innerHTML = "<br> No Suit <br>" + player.handOfCards[0];
+		playerCardTwo.innerHTML = "<br> No Suit <br>" + player.handOfCards[1];
 	}
 	areCardsBeingDealtToTable = true;
 	return areCardsBeingDealtToTable;
 	},
 
 	playerHitOnTable : function (dealer, player) {
-		if (player.bustStatus === false) {
+		if (player.bustStatus === false && haveCardsBeenDealtByDealer === true) {
 		let cardPlacement = this.playerCardCount + 1;
 		//would need to fix the below if more than one player
 		let playerHitCard = document.getElementsByClassName("hiddenCard")[this.playerCardCount];
@@ -210,7 +273,7 @@ var Table = {
 	newHandEraseNumbers : function () {
 		for (var i = 0; i <= 9; i++){
 			var cardsToPickup = document.getElementsByClassName("card");
-			cardsToPickup.innerHTML = "";
+			cardsToPickup[i].innerHTML = "";
 		}
 		//remove old innerHTML
 	},
@@ -230,6 +293,12 @@ var Table = {
 		}
 	},
 
+	playersPush : function () {
+		let winBanner = document.getElementsByClassName("spacer")[0];
+		winBanner.innerHTML = "Players Push!";
+		window.setTimeout(function(){winBanner.innerHTML = "";}, 4000);
+	},
+
 	someoneHasWon : function (object) {
 		if (object.winStatus === true) {
 			let winBanner = document.getElementsByClassName("spacer")[0];
@@ -238,7 +307,32 @@ var Table = {
 		}
 		let dealButtonName = document.getElementById("dealCards");
 		dealButtonName.innerHTML = "Deal Again?";
+	},
+
+	resetPlayerStatus : function (object) {
+		areCardsBeingDealtToTable = false;
+		haveCardsBeenDealtByDealer = false;
+		object.bustStatus = false;
+		object.stayStatus = false;
+		object.winStatus = false;
+		object.sumOfHand = 0;
+	},
+
+	newGameDealing : function (player, dealer) {
+		this.resetPlayerStatus(player);
+		this.resetPlayerStatus(dealer);
+	},
+	//my chips visual functions will go below
+	playerChipCount : function (player) {
+		let playerChips = document.getElementById("chipCount");
+		playerChips.innerHTML = player.chipCount;
+	},
+
+	displayPlayerBet : function (player) {
+		let playerBet = document.getElementById("betAmount");
+		playerBet.innerHTML = player.betAmount;
 	}
+
 };
 
 
@@ -257,6 +351,7 @@ function createDeck (array) {
 	}
 }
 //Calls the first Deck creation method
+
 createDeck(noSuitDeck);
 Table.deckOfCards = noSuitDeck;
 
@@ -264,10 +359,15 @@ Table.deckOfCards = noSuitDeck;
 let Player1 = new  Player("Test Player", 1);
 let beginningDealer = new Dealer("Smokey Joe", noSuitDeck);
 
+Table.playerChipCount(Player1);
 //Instantiates global variables
 let hitButton = document.getElementById("takeAnotherCard");
 let dealButton = document.getElementById("dealCards");
 let stayButton = document.getElementById("stayPat");
+let raiseBetButton = document.getElementById("betAmountUp");
+let lowerBetButton = document.getElementById("betAmountDown");
+let betSetterButton = document.getElementById("setBet");
+const MIN_CARDS_TO_SHUFFLE = 12;
 let areCardsBeingDealtToTable = false;
 let haveCardsBeenDealtByDealer = false;
 let playerHandSum = 0;
@@ -280,6 +380,9 @@ function turnBlue (card) {
 
 
 //event listeners go here:
+dealButton.addEventListener("click", function () {Table.newGameDealing(Player1, beginningDealer);});
+dealButton.addEventListener("click", function () {beginningDealer.newHand(Player1);});
+dealButton.addEventListener("click", function () {beginningDealer.newHand(beginningDealer);});
 dealButton.addEventListener("click", function () {beginningDealer.shuffleDeck(noSuitDeck);});
 dealButton.addEventListener("click", function () {beginningDealer.dealCardstoPlayersSelf(Player1);});
 dealButton.addEventListener("click", function () {Table.dealCardsToTable(Player1, beginningDealer);});
@@ -288,7 +391,7 @@ hitButton.addEventListener("click", function () {Table.playerHitOnTable(beginnin
 hitButton.addEventListener("click", function () {beginningDealer.checkIfCardTakerBust(Player1);});
 stayButton.addEventListener("click", function () {Player1.stayKeepCards();});
 stayButton.addEventListener("click", function () {beginningDealer.playerHasStayed(Player1, Table);});
-
-
-
+raiseBetButton.addEventListener("click" , function () {Player1.raiseBet(Table);});
+lowerBetButton.addEventListener("click" , function () {Player1.lowerBet(Table);});
+dealButton.addEventListener("click", function () {Player1.setBetAmount(Table);});
 
